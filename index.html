@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>သိပ္ပံနည်း ဂဏန်းတွက်စက်</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .calculator {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 460px;
+        }
+
+        .display-container {
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        #history {
+            font-size: 14px;
+            color: #6c757d;
+            height: 20px;
+            margin-bottom: 5px;
+        }
+
+        #display {
+            font-size: 32px;
+            font-weight: bold;
+            color: #212529;
+            height: 45px;
+        }
+
+        .form-control {
+            border: none;
+            background: transparent;
+            text-align: right;
+            padding: 0;
+        }
+
+        .form-control:focus {
+            box-shadow: none;
+            background: transparent;
+        }
+
+        .btn-calc {
+            width: 100%;
+            height: 45px;
+            margin: 3px 0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .number {
+            background-color: white;
+            color: #212529;
+            border: 1px solid #e9ecef;
+        }
+
+        .number:hover {
+            background-color: #f8f9fa;
+        }
+
+        .operator {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .operator:hover {
+            background-color: #bbdefb;
+        }
+
+        .function {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .function:hover {
+            background-color: #e1bee7;
+        }
+
+        .equals {
+            background-color: #1976d2;
+            color: white;
+        }
+
+        .equals:hover {
+            background-color: #1565c0;
+        }
+
+        .clear {
+            background-color: #ffebee;
+            color: #d32f2f;
+        }
+
+        .clear:hover {
+            background-color: #ffcdd2;
+        }
+
+        .memory {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .memory:hover {
+            background-color: #c8e6c9;
+        }
+
+        .row {
+            margin: 4px 0;
+        }
+
+        .calculator-title {
+            color: #212529;
+            font-size: 16px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .mode-switch {
+            margin-bottom: 15px;
+        }
+
+        .btn-group {
+            width: 100%;
+        }
+
+        .btn-mode {
+            width: 50%;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        .btn-mode.active {
+            background-color: #e9ecef;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="calculator-title">သိပ္ပံနည်း ဂဏန်းတွက်စက်</div>
+        
+        <div class="mode-switch">
+            <div class="btn-group">
+                <button class="btn btn-mode active" onclick="switchMode('deg')">DEG</button>
+                <button class="btn btn-mode" onclick="switchMode('rad')">RAD</button>
+            </div>
+        </div>
+
+        <div class="display-container">
+            <input type="text" class="form-control" id="history" readonly>
+            <input type="text" class="form-control" id="display" readonly>
+        </div>
+
+        <div class="row g-2">
+            <div class="col-3">
+                <button class="btn btn-calc memory" onclick="memoryFunction('MC')">MC</button>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-calc memory" onclick="memoryFunction('MR')">MR</button>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-calc memory" onclick="memoryFunction('M+')">M+</button>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-calc memory" onclick="memoryFunction('M-')">M-</button>
+            </div>
+        </div>
+
+        <div class="row g-2">
+            <div class="col-3">
+                <button class="btn btn-calc function" onclick="calculateFunction('sin')">sin</button>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-calc function" onclick="calculateFunction('cos')">cos</button>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-calc function" onclick="calculateFunction('tan')">tan</button>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-calc clear" onclick="clearDisplay()">AC</button>
+            </div>
+        </div>
+
+        <div class="row g-2">
+            <div class="col-3">
+                <button class="btn btn-calc function" onclick="calculateFunction('sqrt')">√</button>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-calc function" onclick="calculateFunction('power')">xʸ</button>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-calc function" onclick="appendNumber('π')">π</button>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-calc operator" onclick="appendOperator('/')">/</button>
+            </div>
+        </div>
+
+        <div class="row g-2">
+            <div class="col-3">
+                <button class="btn btn-calc function" onclick="calculateFunction('log')">log</button>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-calc number" onclick="appendNumber('၇')">၇</button>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-calc number" onclick="appendNumber('၈')">၈</button>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-calc number" onclick="appendNumber('၉')">၉</button>
+            </div>
+        </div>
+
+        <div class="row g-2">
+            <div class="col-3">
+                <button class="btn btn-calc function" onclick="calculateFunction('ln')">ln</button>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-calc number" onclick="appendNumber('၄')">၄</button>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-calc number" onclick="appendNumber('၅')">၅</button>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-calc number" onclick="appendNumber('၆')">၆</button>
+            </div>
+        </div>
+
+        <div class="row g-2">
+            <div class="col-3">
+                <button class="btn btn-calc function" onclick="calculateFunction('exp')">eˣ</button>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-calc number" onclick="appendNumber('၁')">၁</button>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-calc number" onclick="appendNumber('၂')">၂</button>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-calc number" onclick="appendNumber('၃')">၃</button>
+            </div>
+        </div>
+
+        <div class="row g-2">
+            <div class="col-3">
+                <button class="btn btn-calc operator" onclick="appendOperator('(')">(</button>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-calc operator" onclick="appendOperator(')')">)</button>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-calc number" onclick="appendNumber('၀')">၀</button>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-calc equals" onclick="calculate()">=</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let memory = 0;
+        let mode = 'deg';
+
+        function switchMode(newMode) {
+            mode = newMode;
+            document.querySelectorAll('.btn-mode').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function convertToEnglishNumbers(burmeseStr) {
+            const burmeseNumbers = ['၀', '၁', '၂', '၃', '၄', '၅', '၆', '၇', '၈', '၉'];
+            return burmeseStr.split('').map(char => {
+                const index = burmeseNumbers.indexOf(char);
+                return index !== -1 ? index : char;
+            }).join('');
+        }
+
+        function convertToBurmeseNumbers(englishStr) {
+            const burmeseNumbers = ['၀', '၁', '၂', '၃', '၄', '၅', '၆', '၇', '၈', '၉'];
+            return englishStr.split('').map(char => {
+                return isNaN(char) ? char : burmeseNumbers[parseInt(char)];
+            }).join('');
+        }
+
+        function appendNumber(num) {
+            document.getElementById('display').value += num;
+        }
+
+        function appendOperator(operator) {
+            const display = document.getElementById('display');
+            if (display.value !== '') {
+                display.value += operator;
+            }
+        }
+
+        function clearDisplay() {
+            document.getElementById('display').value = '';
+            document.getElementById('history').value = '';
+        }
+
+        function calculateFunction(func) {
+            const display = document.getElementById('display');
+            const value = convertToEnglishNumbers(display.value);
+            let result;
+
+            switch(func) {
+                case 'sin':
+                    result = mode === 'deg' ? 
+                        Math.sin(value * Math.PI / 180) : 
+                        Math.sin(value);
+                    break;
+                case 'cos':
+                    result = mode === 'deg' ? 
+                        Math.cos(value * Math.PI / 180) : 
+                        Math.cos(value);
+                    break;
+                case 'tan':
+                    result = mode === 'deg' ? 
+                        Math.tan(value * Math.PI / 180) : 
+                        Math.tan(value);
+                    break;
+                case 'sqrt':
+                    result = Math.sqrt(value);
+                    break;
+                case 'log':
+                    result = Math.log10(value);
+                    break;
+                case 'ln':
+                    result = Math.log(value);
+                    break;
+                case 'exp':
+                    result = Math.exp(value);
+                    break;
+                case 'power':
+                    display.value += '^';
+                    return;
+            }
+
+            display.value = convertToBurmeseNumbers(result.toFixed(8));
+        }
+
+        function memoryFunction(func) {
+            const display = document.getElementById('display');
+            const value = parseFloat(convertToEnglishNumbers(display.value));
+
+            switch(func) {
+                case 'MC':
+                    memory = 0;
+                    break;
+                case 'MR':
+                    display.value = convertToBurmeseNumbers(memory.toString());
+                    break;
+                case 'M+':
+                    memory += value;
+                    break;
+                case 'M-':
+                    memory -= value;
+                    break;
+            }
+        }
+
+        function calculate() {
+            try {
+                const display = document.getElementById('display');
+                const history = document.getElementById('history');
+                let expression = convertToEnglishNumbers(display.value);
+                
+                // Replace π with its value
+                expression = expression.replace(/π/g, Math.PI);
+                
+                // Handle power operator
+                expression = expression.replace(/\^/g, '**');
+
+                history.value = display.value;
+                const result = eval(expression);
+                display.value = convertToBurmeseNumbers(result.toString());
+            } catch (error) {
+                document.getElementById('display').value = 'အမှား';
+            }
+        }
+
+        // Keyboard support
+        document.addEventListener('keydown', (event) => {
+            const key = event.key;
+            if (/[0-9]/.test(key)) {
+                appendNumber(convertToBurmeseNumbers(key));
+            } else if (['+', '-', '*', '/', '(', ')', '^'].includes(key)) {
+                appendOperator(key);
+            } else if (key === 'Enter') {
+                calculate();
+            } else if (key === 'Escape') {
+                clearDisplay();
+            }
+        });
+    </script>
+</body>
+</html>
